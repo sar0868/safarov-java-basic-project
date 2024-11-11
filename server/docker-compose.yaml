@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+  pg:
+    image: postgres
+    environment:
+      POSTGRES_DB: chat
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: passwd
+      PGDATA: /var/lib/postgresql/data/pgchat
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data/pgchat
+
+volumes:
+  db-data:

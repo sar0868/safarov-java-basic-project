@@ -255,4 +255,9 @@ public class AuthenticationProvider implements AuthenticatedProvider {
         }
         return false;
     }
+
+    @Override
+    public String getGroupOwner(String groupTitle) {
+        return clientDAO.getUsernameManagerGroup(groupTitle);
+    }
 }

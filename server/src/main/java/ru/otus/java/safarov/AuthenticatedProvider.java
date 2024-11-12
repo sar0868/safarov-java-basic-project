@@ -42,4 +42,6 @@ public interface AuthenticatedProvider {
     boolean deleteUser(String username);
 
     boolean delGroup(String groupTitle);
+
+    String getGroupOwner(String groupTitle);
 }

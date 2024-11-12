@@ -15,14 +15,12 @@ public class ClientHandler {
     private final DataOutputStream out;
     private String name;
     private String groupTitle;
-    private final Map<String, List<String>> requestsAddGroups;
 
     public ClientHandler(Server server, Socket socket) throws IOException {
         this.server = server;
         this.socket = socket;
         this.in = new DataInputStream(socket.getInputStream());
         this.out = new DataOutputStream(socket.getOutputStream());
-        requestsAddGroups = new HashMap<>();
         this.groupTitle = "";
         new Thread(() -> {
             try {
@@ -223,6 +221,7 @@ public class ClientHandler {
             sendMessage("Некорректный формат ввода /gkick");
         } else {
             server.getAuthenticatedProvider().kickUserFromGroup(this, array[1]);
+            sendMessage("Пользователь " + array[1] + " удален из группы " + groupTitle);
         }
     }
 
@@ -241,18 +240,21 @@ public class ClientHandler {
 
     private void acceptReview(String msg) {
         String[] array = msg.trim().split(("\\s+"));
-        if (array.length > 1) {
-            List<String> addUsers = new ArrayList<>();
-            for (int i = 1; i < array.length; i++) {
-                if (requestsAddGroups.get(groupTitle).contains(array[i])) {
-                    addUsers.add(array[i]);
+        if(!server.getAuthenticatedProvider().isManagerGroup(this, groupTitle)){
+            sendMessage("Вы не являетесь создателем группы");
+        } else {
+            if (array.length > 1) {
+                List<String> requestsAddGroups = server.getAuthenticatedProvider().getListRequest(this, groupTitle);
+                List<String> addUsers = new ArrayList<>();
+                for (int i = 1; i < array.length; i++) {
+                    if (requestsAddGroups.contains(array[i])) {
+                        addUsers.add(array[i]);
+                    }
                 }
+                server.getAuthenticatedProvider().addUsersToGroup(this, addUsers);
             }
-            server.getAuthenticatedProvider().addUsersToGroup(this, addUsers);
+            server.getAuthenticatedProvider().removeRequestAddUserToGroup(this);
         }
-        server.getAuthenticatedProvider().removeRequestAddUserToGroup(this);
-        requestsAddGroups.remove(groupTitle);
-
     }
 
     public void leaveGroup() {
@@ -272,8 +274,12 @@ public class ClientHandler {
                 logger.info("Запрос на добавление группы {} не создан", array[1]);
             } else {
                 sendMessage("Ваш запрос на добавление в группу " + array[1] + " создан");
+                String groupOwner = server.getAuthenticatedProvider().getGroupOwner(array[1]);
+                String msgGroupOwner = "review: " + name;
+                server.sendMessageClient(this, groupOwner, msgGroupOwner);
             }
         }
+
     }
 
     private void enterGroup(String msg) {
@@ -308,7 +314,7 @@ public class ClientHandler {
     private void reviewrequest() {
         if (server.getAuthenticatedProvider().isManagerGroup(this, groupTitle)) {
             List<String> usersSentRequest = server.getAuthenticatedProvider().getListRequest(this, groupTitle);
-            requestsAddGroups.put(groupTitle, usersSentRequest);
+//            requestsAddGroups.put(groupTitle, usersSentRequest);
             if (!usersSentRequest.isEmpty()) {
                 sendMessage("review: " + String.join(" ", usersSentRequest));
             }

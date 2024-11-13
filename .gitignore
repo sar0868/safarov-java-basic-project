@@ -38,5 +38,9 @@ build/
 ### Mac OS ###
 .DS_Store
 /logs
-/server/target/classes/
+*/target/classes/*
 /client/target/classes/
+/server/target/classes/
+server/target/classes/ru/otus/java/safarov/AuthenticatedProvider.class
+server/target/classes/ru/otus/java/safarov/AuthenticationProvider.class
+server/target/classes/ru/otus/java/safarov/ClientHandler.class

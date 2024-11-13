@@ -173,6 +173,9 @@ public class ClientHandler {
         }
         if (server.getAuthenticatedProvider().isAdmin(this) ||
                 server.getAuthenticatedProvider().isManagerGroup(this, array[1])) {
+            if (groupTitle.equals(array[1])) {
+                leaveGroup();
+            }
             return server.getAuthenticatedProvider().delGroup(array[1]);
         }
         sendMessage("Вы не являетесь администратором или создателем группы");
@@ -240,7 +243,7 @@ public class ClientHandler {
 
     private void acceptReview(String msg) {
         String[] array = msg.trim().split(("\\s+"));
-        if(!server.getAuthenticatedProvider().isManagerGroup(this, groupTitle)){
+        if (!server.getAuthenticatedProvider().isManagerGroup(this, groupTitle)) {
             sendMessage("Вы не являетесь создателем группы");
         } else {
             if (array.length > 1) {
@@ -314,7 +317,7 @@ public class ClientHandler {
     private void reviewrequest() {
         if (server.getAuthenticatedProvider().isManagerGroup(this, groupTitle)) {
             List<String> usersSentRequest = server.getAuthenticatedProvider().getListRequest(this, groupTitle);
-//            requestsAddGroups.put(groupTitle, usersSentRequest);
+            // requestsAddGroups.put(groupTitle, usersSentRequest);
             if (!usersSentRequest.isEmpty()) {
                 sendMessage("review: " + String.join(" ", usersSentRequest));
             }

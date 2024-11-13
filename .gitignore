@@ -44,3 +44,7 @@ build/
 server/target/classes/ru/otus/java/safarov/AuthenticatedProvider.class
 server/target/classes/ru/otus/java/safarov/AuthenticationProvider.class
 server/target/classes/ru/otus/java/safarov/ClientHandler.class
+/out/artifacts/client_jar/client.jar
+/server/META-INF/MANIFEST.MF
+/server/src/main/resources/META-INF/MANIFEST.MF
+/out/artifacts/server_jar/server.jar

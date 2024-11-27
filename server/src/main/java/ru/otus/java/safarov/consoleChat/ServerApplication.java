@@ -1,4 +1,4 @@
-package ru.otus.java.safarov;
+package ru.otus.java.safarov.consoleChat;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

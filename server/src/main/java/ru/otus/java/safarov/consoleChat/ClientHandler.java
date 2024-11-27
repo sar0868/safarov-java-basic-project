@@ -1,4 +1,4 @@
-package ru.otus.java.safarov;
+package ru.otus.java.safarov.consoleChat;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.*;
 
-import static ru.otus.java.safarov.ServerApplication.logger;
+import static ru.otus.java.safarov.consoleChat.ServerApplication.logger;
 
 public class ClientHandler {
     private final Server server;
@@ -67,7 +67,7 @@ public class ClientHandler {
                         } else if (msg.startsWith("/kick ")) {
                             kickUser(msg);
                         } else if (msg.startsWith("/changenick")) {
-                            String oldName = getName();
+                            String oldName = name;
                             if (changeNick(msg)) {
                                 server.changeNick(this, oldName);
                                 String infoMsg = "Клиент " + oldName + " изменил username на " + name;
@@ -301,7 +301,7 @@ public class ClientHandler {
                     getDeferredMessages();
                     reviewrequest();
                 } else {
-                    logger.info("Пользователю {} не удалось сменить группу на {}", getName(), array[1]);
+                    logger.info("Пользователю {} не удалось сменить группу на {}", name, array[1]);
                     sendMessage("Не удалось сменить группу на " + array[1]);
                 }
             }
@@ -329,7 +329,7 @@ public class ClientHandler {
     }
 
     private void getTitlesGroups() {
-        List<String> titles = server.getAuthenticatedProvider().getGroupTitle(this);
+        List<String> titles = server.getAuthenticatedProvider().getGroupTitle();
         sendMessage("list groups: " + String.join(" ", titles));
     }
 

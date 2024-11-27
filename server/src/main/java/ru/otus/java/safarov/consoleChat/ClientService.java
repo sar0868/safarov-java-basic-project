@@ -1,4 +1,4 @@
-package ru.otus.java.safarov;
+package ru.otus.java.safarov.consoleChat;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -8,7 +8,7 @@ public interface ClientService extends AutoCloseable{
 
     String getUsername(String login, String password);
 
-    int addUser(int id, User user) throws SQLException;
+    boolean addUser(int id, User user) throws SQLException;
 
     boolean isLogin(String login);
 
@@ -24,7 +24,7 @@ public interface ClientService extends AutoCloseable{
 
     int getGroupID(String title);
 
-    int addGroup(String title, String username);
+    boolean addGroup(String title, String username);
 
     int insertUsersToGroups(int userId, int groupID);
 

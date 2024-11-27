@@ -1,4 +1,4 @@
-package ru.otus.java.safarov;
+package ru.otus.java.safarov.consoleChat;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ public interface AuthenticatedProvider {
 
     boolean addGroup(ClientHandler clientHandler, String title);
 
-    List<String> getGroupTitle(ClientHandler clientHandler);
+    List<String> getGroupTitle();
 
     boolean enterGroup(ClientHandler clientHandler, String groupTitle);
 

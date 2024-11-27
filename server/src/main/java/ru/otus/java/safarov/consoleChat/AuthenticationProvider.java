@@ -1,9 +1,9 @@
-package ru.otus.java.safarov;
+package ru.otus.java.safarov.consoleChat;
 
 import java.sql.SQLException;
 import java.util.List;
 
-import static ru.otus.java.safarov.ServerApplication.logger;
+import static ru.otus.java.safarov.consoleChat.ServerApplication.logger;
 
 public class AuthenticationProvider implements AuthenticatedProvider {
 
@@ -64,7 +64,7 @@ public class AuthenticationProvider implements AuthenticatedProvider {
             clientHandler.sendMessage("Указанное имя пользователя уже занято.");
             return false;
         }
-        if (clientDAO.addUser(clientDAO.getAll().size() + 1, new User(login, password, username)) == -1) {
+        if (clientDAO.addUser(clientDAO.getAll().size() + 1, new User(login, password, username))) {
             String msgError = username + " не зарегистрирован.";
             logger.info(msgError);
             clientHandler.sendMessage(msgError);
@@ -112,7 +112,7 @@ public class AuthenticationProvider implements AuthenticatedProvider {
             clientHandler.sendMessage("Указанная группа уже существует.");
             return false;
         }
-        if (clientDAO.addGroup(title, clientHandler.getName()) == -1) {
+        if (clientDAO.addGroup(title, clientHandler.getName())) {
             String msgError = title + " не создан.";
             logger.info(msgError);
             clientHandler.sendMessage(msgError);
@@ -127,7 +127,7 @@ public class AuthenticationProvider implements AuthenticatedProvider {
     }
 
     @Override
-    public synchronized List<String> getGroupTitle(ClientHandler clientHandler) {
+    public synchronized List<String> getGroupTitle() {
         return clientDAO.getGroupTitle();
     }
 

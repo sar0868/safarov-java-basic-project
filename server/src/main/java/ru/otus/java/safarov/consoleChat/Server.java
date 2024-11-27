@@ -1,11 +1,11 @@
-package ru.otus.java.safarov;
+package ru.otus.java.safarov.consoleChat;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
 
-import static ru.otus.java.safarov.ServerApplication.logger;
+import static ru.otus.java.safarov.consoleChat.ServerApplication.logger;
 
 public class Server {
     private final int port;

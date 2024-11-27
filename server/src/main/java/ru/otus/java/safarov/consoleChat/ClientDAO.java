@@ -1,4 +1,4 @@
-package ru.otus.java.safarov;
+package ru.otus.java.safarov.consoleChat;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -51,8 +51,8 @@ public class ClientDAO implements ClientService {
     }
 
     @Override
-    public int addUser(int id, User user) {
-        int result = -1;
+    public boolean addUser(int id, User user) {
+        int result;
         try {
             connection.setAutoCommit(false);
         } catch (SQLException e) {
@@ -68,13 +68,13 @@ public class ClientDAO implements ClientService {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        if (result != -1 && insertUsersToRoles(id) == -1) {
+        if (result != 0 && !insertUsersToRoles(id)) {
             try {
                 connection.rollback();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
-            return -1;
+            return false;
         }
         try {
             connection.commit();
@@ -82,10 +82,10 @@ public class ClientDAO implements ClientService {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return result;
+        return true;
     }
 
-    private int insertUsersToRoles(int id) {
+    private boolean insertUsersToRoles(int id) {
         int result = -1;
         String INSERT_USERS_TO_ROLES = "INSERT INTO Users_to_Roles (userID, roleID) values (?, 2)";
         try (PreparedStatement pst = connection.prepareStatement(INSERT_USERS_TO_ROLES)) {
@@ -95,7 +95,7 @@ public class ClientDAO implements ClientService {
             throw new RuntimeException(e);
         }
 
-        return result;
+        return result != -1;
     }
 
     @Override
@@ -184,44 +184,6 @@ public class ClientDAO implements ClientService {
 
     }
 
-//    @Override
-//    public int addDepartment(Department department, String username) {
-//        int result = -1;
-//        String table = "department";
-//        int departmentID = getMaxID(table) + 1;
-//        int userID = getUserID(username);
-//        try {
-//            connection.setAutoCommit(false);
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//        String INSERT_DEPARTMENT = "INSERT INTO department (id, title, managerid) values(?, ?, ?)";
-//        try (PreparedStatement pst = connection.prepareStatement(INSERT_DEPARTMENT)) {
-//            pst.setInt(1, departmentID);
-//            pst.setString(2, department.getTitle());
-//            pst.setInt(3, userID);
-//            result = pst.executeUpdate();
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//        if (result != -1 && insertUsersToDepartment(userID, departmentID) == -1) {
-//            try {
-//                connection.rollback();
-//            } catch (SQLException e) {
-//                throw new RuntimeException(e);
-//            }
-//            return -1;
-//        }
-//        try {
-//            connection.commit();
-//            connection.setAutoCommit(true);
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//        return result;
-//    }
-
-
     @Override
     public int getMaxID(String table) {
         int id = -1;
@@ -237,54 +199,6 @@ public class ClientDAO implements ClientService {
             throw new RuntimeException(e);
         }
     }
-
-//    @Override
-//    public int insertUsersToDepartment(int userId, int departmentID) {
-//        int result = -1;
-//        String INSERT_USERS_TO_DEPARTMENTS = "INSERT INTO users_to_departments (userID, departmentID) values(?, ?)";
-//        try (PreparedStatement pst = connection.prepareStatement(INSERT_USERS_TO_DEPARTMENTS)) {
-//            pst.setInt(1, userId);
-//            pst.setInt(2, departmentID);
-//            result = pst.executeUpdate();
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//        return result;
-//    }
-
-//    @Override
-//    public boolean isDepartment(String title) {
-//        int id = -1;
-//        String isTitle = "select id from department where title = ?";
-//        try (PreparedStatement pst = connection.prepareStatement(isTitle)) {
-//            pst.setString(1, title);
-//            try (ResultSet resultSet = pst.executeQuery()) {
-//                while (resultSet.next()) {
-//                    id = resultSet.getInt("id");
-//                }
-//            }
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//        return id != -1;
-//    }
-//
-//    @Override
-//    public Set<Department> getDepartments() {
-//        Set<Department> departments = new HashSet<>();
-//        try (Statement statement = connection.createStatement()) {
-//            String GET_DEPARTMENTS = "SELECT title FROM department";
-//            try (ResultSet resultSet = statement.executeQuery(GET_DEPARTMENTS)) {
-//                while (resultSet.next()) {
-//                    String title = resultSet.getString("title");
-//                    departments.add(new Department(title));
-//                }
-//            }
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//        return departments;
-//    }
 
     @Override
     public int getGroupID(String title) {
@@ -304,8 +218,8 @@ public class ClientDAO implements ClientService {
     }
 
     @Override
-    public int addGroup(String title, String username) {
-        int result = -1;
+    public boolean addGroup(String title, String username) {
+        int result;
         int groupID = getMaxID("groups") + 1;
         int userID = getUserID(username);
         try {
@@ -322,13 +236,13 @@ public class ClientDAO implements ClientService {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        if (result != -1 && insertUsersToGroups(userID, groupID) == -1) {
+        if (result != 0 && insertUsersToGroups(userID, groupID) == -1) {
             try {
                 connection.rollback();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
-            return -1;
+            return false;
         }
         try {
             connection.commit();
@@ -336,7 +250,7 @@ public class ClientDAO implements ClientService {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return result;
+        return true;
 
     }
 
